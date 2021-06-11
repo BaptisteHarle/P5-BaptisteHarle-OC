@@ -13,36 +13,56 @@ function injectProducts(products) {
         <img class="commande-image" src="${product.imageUrl}" alt="${product.name}">
         <section class="commande-text">
           <h3>${product.name}</h3>
+          <h4>${product.lense}<h4>
           <p>${product.price / 100}€</p>
+          <button>supprimer</button>
         </section>
       </div> 
     `)}
   `;
 }
+
+/**
+ * @param {array} products 
+ */
 function calculatePrice(products) {
   const taxFreePriceEl = document.getElementById('tax-free-price');
-  const taxAmountEl = document.getElementById('tax-amount');
-  const taxIncludedEl = document.getElementById('tax-included-price');
+  const taxAmountEl    = document.getElementById('tax-amount');
+  const taxIncludedEl  = document.getElementById('tax-included-price');
+
   let taxIncludedPrice = 0;
-  let taxFreePrice = 0;
-  let taxAmount = 0;
+  let taxFreePrice     = 0;
+  let taxAmount        = 0;
+
   products.forEach(product => taxIncludedPrice = taxIncludedPrice + product.price);
+
   taxIncludedPrice = taxIncludedPrice / 100;
-  taxFreePrice = taxIncludedPrice / 1.2;
-  taxAmount = taxIncludedPrice - taxFreePrice;
-  taxFreePriceEl.innerHTML = `Montant HT: ${taxFreePrice.toFixed(2)}€`;
-  taxAmountEl.innerHTML = `TVA 20% : ${taxAmount.toFixed(2)}€`;
-  taxIncludedEl.innerHTML = `Total TTC: ${taxIncludedPrice.toFixed(2)}€`;
+  taxFreePrice     = taxIncludedPrice / 1.2;
+  taxAmount        = taxIncludedPrice - taxFreePrice;
+
+  taxFreePriceEl.innerHTML  = `Montant HT: ${taxFreePrice.toFixed(2)}€`;
+  taxAmountEl.innerHTML     = `TVA 20% : ${taxAmount.toFixed(2)}€`;
+  taxIncludedEl.innerHTML   = `Total TTC: ${taxIncludedPrice.toFixed(2)}€`;
 }
 
+/**
+ * 
+ * @param {string} email 
+ * @returns 
+ */
 function validateEmail(email) {
   const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  
   return re.test(String(email).toLowerCase());
 }
+
 function validateName(name) {
+  
   return name.length > 2;
 }
+
 function validateInput(value) {
+  
   return value.length > 1; 
 }
 

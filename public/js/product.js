@@ -27,9 +27,10 @@ function injectCamera(camera) {
   document.getElementById('order-btn').addEventListener('click', () => {
     const storage = localStorage.getItem('basket');
     const basket = storage ? JSON.parse(storage) : [];
-    basket.push(camera);
+    basket.push(camera,camera.lense);
     localStorage.setItem('basket', JSON.stringify(basket));
     alert('Article ajouté au panier.');
     window.location.href = '/';
+    // localStorage.clear();
   });
 }
