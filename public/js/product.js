@@ -41,6 +41,5 @@ function injectCamera(camera) {
     localStorage.setItem('basket', JSON.stringify(basket));
     alert('Article ajouté au panier.');
     window.location.href = '/';
-    // localStorage.clear();
   });
 }
