@@ -7,6 +7,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   const camera = await NetworkInterface.get(`http://localhost:3000/api/cameras/${id}`);
   injectCamera(camera);
 });
+function uuidv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
 function injectCamera(camera) {
   const container = document.getElementById('product-container');
   console.log(camera.lenses.map(lense => `<option value="${lense}">${lense}</option>`))
@@ -27,9 +33,14 @@ function injectCamera(camera) {
   document.getElementById('order-btn').addEventListener('click', () => {
     const storage = localStorage.getItem('basket');
     const basket = storage ? JSON.parse(storage) : [];
+    const $select = document.getElementById('lenses-select');
+    const lense = $select.value;
+    camera.lense = lense;
+    camera.uuid = uuidv4();
     basket.push(camera);
     localStorage.setItem('basket', JSON.stringify(basket));
     alert('Article ajouté au panier.');
     window.location.href = '/';
+    // localStorage.clear();
   });
 }

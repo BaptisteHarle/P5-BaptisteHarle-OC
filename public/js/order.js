@@ -8,17 +8,42 @@ function injectProducts(products) {
   const container = document.getElementById('order-section');
   container.innerHTML = `
     <h1>Votre commande</h1>
-    ${products.map(product => `
+    ${products.map((product) => `
       <div class="commande-section">
         <img class="commande-image" src="${product.imageUrl}" alt="${product.name}">
         <section class="commande-text">
           <h3>${product.name}</h3>
+          <h4>${product.lense}<h4>
           <p>${product.price / 100}€</p>
+          <button onclick="onDelete('${product.uuid}')">supprimer</button>
         </section>
-      </div> 
-    `)}
+      </div>`
+    )}
   `;
 }
+function onDelete(uuid) {
+  /**
+   * 1) Je récupère un identifiant UNIQUE de l'item à supprimer
+   * 2) Je récupère le contenu de mon store dans une nouvelle variable
+   * 3) Je supprime du contenu de cette variable, l'item en question
+   * 4) Je remplace le store par la variable modifiée 
+   */
+  console.log(`Item to be deleted: `, uuid);
+  const items = JSON.parse(localStorage.getItem('basket'));
+  console.log(`Before deletion: `, items);
+  const itemToDelete = items.find(i => i.uuid === uuid);
+  const itemIndex = items.indexOf(itemToDelete);
+  items.splice(itemIndex, 1);
+  localStorage.setItem('basket', JSON.stringify(items));
+  console.log(`After deletion: `, items);
+  injectProducts(items);
+  // console.log(JSON.parse(items));
+  // console.log(`L'utilisateur souhaite supprimer le produit ${uuid}`);
+  // alert('User asked for deletion process.');
+}
+/**
+ * @param {array} products 
+ */
 function calculatePrice(products) {
   const taxFreePriceEl = document.getElementById('tax-free-price');
   const taxAmountEl = document.getElementById('tax-amount');
@@ -34,7 +59,11 @@ function calculatePrice(products) {
   taxAmountEl.innerHTML = `TVA 20% : ${taxAmount.toFixed(2)}€`;
   taxIncludedEl.innerHTML = `Total TTC: ${taxIncludedPrice.toFixed(2)}€`;
 }
-
+/**
+ * 
+ * @param {string} email 
+ * @returns 
+ */
 function validateEmail(email) {
   const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());
@@ -43,10 +72,8 @@ function validateName(name) {
   return name.length > 2;
 }
 function validateInput(value) {
-  return value.length > 1; 
+  return value.length > 1;
 }
-
-
 document.getElementById('post-button').addEventListener('click', async (e) => {
   e.preventDefault();
   const email = document.getElementById('email').value;
@@ -62,20 +89,23 @@ document.getElementById('post-button').addEventListener('click', async (e) => {
     email,
   }
   const basket = localStorage.getItem('basket');
+  if(!basket || basket.length < 1) {
+    alert('Veuillez remplir votre panier avant de commander !');
+    return;
+  }
   const productsFromBasket = basket ? JSON.parse(basket) : [];
   const products = productsFromBasket.map(p => p._id);
   const body = {
-        contact,
-        products,
+    contact,
+    products,
   }
-
   if (validateEmail(email) && validateName(firstName) && validateName(lastName) && validateInput(city) && validateInput(address)) {
-   const response = await NetworkInterface.post('http://localhost:3000/api/cameras/order', body);
-   alert('votre commande a bien etait effectuée'); 
-   window.location.href = '/congrats';
-   
+    const response = await NetworkInterface.post('http://localhost:3000/api/cameras/order', body);
+    alert('votre commande a bien etait effectuée');
+    window.location.href = '/congrats';
+    localStorage.clear();
   } else {
-    console.log('error triggered')
+    console.log('error triggered');
     console.log(contact);
     console.log(products);
   }
