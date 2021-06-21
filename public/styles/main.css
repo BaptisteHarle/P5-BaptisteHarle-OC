@@ -279,6 +279,30 @@ Order
     text-align: center;
     margin-top: 50px;
    }
+   .header nav ul li #basket {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: black;
+    height: 42px;
+    width: 102px;
+    color: white;
+    font-size: 11px;
+   }
+   .header {
+    position: fixed;
+    z-index: 99;
+    background: white;
+    top: 0;
+    /* width: calc(100% - 100px); */
+    height: 100px;
+    /* padding-left: 50px; */
+    /* padding-right: 50px; */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'Roboto';
+   }
 }
 
 /* Tablettes */
