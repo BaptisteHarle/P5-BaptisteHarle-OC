@@ -8,6 +8,7 @@ function injectProducts(products) {
   const container = document.getElementById('order-section');
   container.innerHTML = `
     <h1>Votre commande</h1>
+    <button  class="basket-add" onclick="onClearStorage('${basket}')">Supprimer le panier</button>
     ${products.map((product) => `
       <div class="commande-section">
         <img class="commande-image" src="${product.imageUrl}" alt="${product.name}">
@@ -15,7 +16,7 @@ function injectProducts(products) {
           <h3>${product.name}</h3>
           <h4>${product.lense}<h4>
           <p>${product.price / 100}€</p>
-          <button onclick="onDelete('${product.uuid}')">supprimer</button>
+          <button  class="basket-add" onclick="onDelete('${product.uuid}')">supprimer</button>
         </section>
       </div>`
     )}
@@ -41,6 +42,12 @@ function onDelete(uuid) {
   // console.log(`L'utilisateur souhaite supprimer le produit ${uuid}`);
   // alert('User asked for deletion process.');
 }
+function onClearStorage() {
+  localStorage.clear();
+  // injectProducts(products);
+  alert('clicked');
+}
+
 /**
  * @param {array} products 
  */
@@ -48,13 +55,17 @@ function calculatePrice(products) {
   const taxFreePriceEl = document.getElementById('tax-free-price');
   const taxAmountEl = document.getElementById('tax-amount');
   const taxIncludedEl = document.getElementById('tax-included-price');
+
   let taxIncludedPrice = 0;
   let taxFreePrice = 0;
   let taxAmount = 0;
+
   products.forEach(product => taxIncludedPrice = taxIncludedPrice + product.price);
+
   taxIncludedPrice = taxIncludedPrice / 100;
   taxFreePrice = taxIncludedPrice / 1.2;
   taxAmount = taxIncludedPrice - taxFreePrice;
+
   taxFreePriceEl.innerHTML = `Montant HT: ${taxFreePrice.toFixed(2)}€`;
   taxAmountEl.innerHTML = `TVA 20% : ${taxAmount.toFixed(2)}€`;
   taxIncludedEl.innerHTML = `Total TTC: ${taxIncludedPrice.toFixed(2)}€`;
@@ -88,7 +99,10 @@ document.getElementById('post-button').addEventListener('click', async (e) => {
     city,
     email,
   }
-  const basket = localStorage.getItem('basket');
+
+  // Je verifie que le localstorage n'est pas vide 
+  const basket = localStorage.getItem('basket') ? JSON.parse(localStorage.getItem('basket')) : null;
+  console.log('contenu du basket:', basket);
   if(!basket || basket.length < 1) {
     alert('Veuillez remplir votre panier avant de commander !');
     return;
