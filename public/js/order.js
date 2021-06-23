@@ -3,12 +3,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const products = basket ? JSON.parse(basket) : [];
   injectProducts(products);
   calculatePrice(products);
+  showDeleteButton();
 });
 function injectProducts(products) {
   const container = document.getElementById('order-section');
   container.innerHTML = `
     <h1>Votre commande</h1>
-    <button  class="basket-add" onclick="onClearStorage('${basket}')">Supprimer le panier</button>
+    <button  id="deleteButton" class="basket-add" onclick="onClearStorage('${basket}')">Supprimer le panier</button> 
     ${products.map((product) => `
       <div class="commande-section">
         <img class="commande-image" src="${product.imageUrl}" alt="${product.name}">
@@ -44,10 +45,19 @@ function onDelete(uuid) {
 }
 function onClearStorage() {
   localStorage.clear();
-  // injectProducts(products);
+  injectProducts([]);
   alert('clicked');
 }
-
+function showDeleteButton() {
+  const deleteButton = document.getElementById('deleteButton');
+  const basket = localStorage.getItem('basket');
+  const products = basket ? JSON.parse(basket) : [];
+   if(products.length > 1) {
+    deleteButton.style.display = "block";
+   } else {
+    deleteButton.style.display = "none";
+   }
+}
 /**
  * @param {array} products 
  */
