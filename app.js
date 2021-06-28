@@ -18,7 +18,7 @@ app.use((req, res, next) => {
 app.use('/', express.static(path.join(__dirname, 'public')));
 app.use('/product/:uuid', express.static(path.join(__dirname, 'public/html/product.html')));
 app.use('/order', express.static(path.join(__dirname, 'public/html/order.html')));
-app.use('/congrats/:orderId', express.static(path.join(__dirname, 'public/html/order-congrats.html')));
+app.use('/congrats', express.static(path.join(__dirname, 'public/html/order-congrats.html')));
 
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
