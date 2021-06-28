@@ -1,13 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const basket = localStorage.getItem('basket');
-  const products = basket ? JSON.parse(basket) : [];
-  injectProducts(products);
-  calculatePrice(products);
-  showDeleteButton();
+    const basket = localStorage.getItem('basket');
+    const products = basket ? JSON.parse(basket) : [];
+    injectProducts(products);
+    calculatePrice(products);
+    showDeleteButton();
 });
+
 function injectProducts(products) {
-  const container = document.getElementById('order-section');
-  container.innerHTML = `
+    const container = document.getElementById('order-section');
+    container.innerHTML = `
     <h1>Votre commande</h1>
     <button  id="deleteButton" class="basket-add" onclick="onClearStorage('${basket}')">Supprimer le panier</button> 
     ${products.map((product) => `
@@ -46,7 +47,6 @@ function onDelete(uuid) {
 function onClearStorage() {
   localStorage.clear();
   injectProducts([]);
-  alert('clicked');
 }
 function showDeleteButton() {
   const deleteButton = document.getElementById('deleteButton');
@@ -117,7 +117,7 @@ document.getElementById('post-button').addEventListener('click', async (e) => {
     alert('Veuillez remplir votre panier avant de commander !');
     return;
   }
-  const productsFromBasket = basket ? JSON.parse(basket) : [];
+  const productsFromBasket = basket ? basket : [];
   const products = productsFromBasket.map(p => p._id);
   const body = {
     contact,
@@ -126,7 +126,8 @@ document.getElementById('post-button').addEventListener('click', async (e) => {
   if (validateEmail(email) && validateName(firstName) && validateName(lastName) && validateInput(city) && validateInput(address)) {
     const response = await NetworkInterface.post('http://localhost:3000/api/cameras/order', body);
     alert('votre commande a bien etait effectuée');
-    window.location.href = '/congrats';
+    const orderId = "tototo";
+    window.location.href = `/congrats/${orderId}`;
     localStorage.clear();
   } else {
     console.log('error triggered');
